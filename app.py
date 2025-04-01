@@ -18,7 +18,7 @@ if uploaded_files:
     for col, file in zip(cols, uploaded_files):
         if file.type.startswith("image"):
             image = Image.open(file)
-            col.image(image, caption=file.name, use_column_width=True)
+            col.image(image, caption=file.name, use_container_width=True)
 
 
 # Bên phải: Các chức năng xử lý
