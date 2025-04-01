@@ -14,10 +14,12 @@ with st.sidebar:
 # Hiển thị ảnh ngay sau phần tiêu đề
 if uploaded_files:
     st.header("Ảnh đã tải lên")
-    for file in uploaded_files:
+    cols = st.columns(len(uploaded_files))
+    for col, file in zip(cols, uploaded_files):
         if file.type.startswith("image"):
             image = Image.open(file)
-            st.image(image, caption=file.name, use_column_width=True)
+            col.image(image, caption=file.name, use_column_width=True)
+
 
 # Bên phải: Các chức năng xử lý
 st.header("Chức năng xử lý")
