@@ -1,5 +1,7 @@
 import streamlit as st
 import requests
+from PIL import Image
+import io
 
 st.title("Công cụ tạo nội dung mạng xã hội")
 
@@ -8,6 +10,14 @@ with st.sidebar:
     st.header("Upload dữ liệu")
     uploaded_files = st.file_uploader("Chọn ảnh hoặc video", accept_multiple_files=True, type=["jpg", "jpeg", "png", "mp4", "mov"])
     social_platform = st.text_input("Nền tảng mạng xã hội", "Tất cả")
+
+# Hiển thị ảnh ngay sau phần tiêu đề
+if uploaded_files:
+    st.header("Ảnh đã tải lên")
+    for file in uploaded_files:
+        if file.type.startswith("image"):
+            image = Image.open(file)
+            st.image(image, caption=file.name, use_column_width=True)
 
 # Bên phải: Các chức năng xử lý
 st.header("Chức năng xử lý")
@@ -20,7 +30,7 @@ if st.button("Tạo tiêu đề"):
         files_data = [("files", file) for file in uploaded_files]
         data = {"social_media": social_platform}
         response = requests.post(f"{API_URL}/create-title", files=files_data, data=data)
-        result = response.json()['title']
+        result = response.json().get('title', 'Không có tiêu đề được tạo')
         st.text(f"Tiêu đề được tạo: {result}")
     else:
         st.warning("Vui lòng tải lên ít nhất một tệp.")
@@ -32,7 +42,7 @@ if st.button("Tinh chỉnh tiêu đề"):
         files_data = [("files", file) for file in uploaded_files]
         data = {"social_media": social_platform, "title": title_input}
         response = requests.post(f"{API_URL}/create-title", files=files_data, data=data)
-        result = response.json()['title']
+        result = response.json().get('title', 'Không có tiêu đề được tinh chỉnh')
         st.text(f"Tiêu đề tinh chỉnh: {result}")
     else:
         st.warning("Vui lòng tải lên tệp và nhập tiêu đề.")
@@ -44,7 +54,7 @@ if st.button("Tạo nội dung"):
         files_data = [("files", file) for file in uploaded_files]
         data = {"social_media": social_platform, "title": content_input}
         response = requests.post(f"{API_URL}/create-content", files=files_data, data=data)
-        result = response.json()['content']
+        result = response.json().get('content', 'Không có nội dung được tạo')
         st.text(f"Nội dung được tạo: {result}")
     else:
         st.warning("Vui lòng tải lên tệp.")
