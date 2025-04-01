@@ -29,7 +29,7 @@ API_URL = "http://tekup.dongnamduocgl.com"
 # Khu vực tạo tiêu đề
 if st.button("Tạo tiêu đề"):
     if uploaded_files:
-        files_data = [("files", file) for file in uploaded_files]
+        files_data = [("files", (file.name, file.getvalue(), file.type)) for file in uploaded_files]
         data = {"social_media": social_platform}
         response = requests.post(f"{API_URL}/create-title", files=files_data, data=data)
         result = response.json().get('title', 'Không có tiêu đề được tạo')
